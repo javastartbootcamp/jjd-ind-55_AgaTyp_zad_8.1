@@ -6,7 +6,6 @@ public class Group {
     private String code;
     private String name;
     private int lecturerId;
-    private static int counter = 0;
 
     private Student[] students = new Student[10];
     private int studentsNo = 0;
@@ -17,8 +16,6 @@ public class Group {
         this.code = code;
         this.name = name;
         this.lecturerId = lecturerId;
-
-        counter++;
     }
 
     void add(Student student) {
@@ -97,16 +94,16 @@ public class Group {
         }
     }
 
+    public int getStudentsNo() {
+        return studentsNo;
+    }
+
+    public void setStudentsNo(int studentsNo) {
+        this.studentsNo = studentsNo;
+    }
+
     public Student[] getStudents() {
         return students;
-    }
-
-    public static int getCounter() {
-        return counter;
-    }
-
-    public static void setCounter(int counter) {
-        Group.counter = counter;
     }
 
     public String getCode() {
