@@ -22,7 +22,7 @@ public class UniversityApp {
 
     public void createLecturer(int id, String degree, String firstName, String lastName) {
 
-        if ( id >= lecturers.length) {
+        if (id >= lecturers.length) {
             lecturers = Arrays.copyOf(lecturers, lecturers.length * 2);
         }
 
@@ -46,13 +46,16 @@ public class UniversityApp {
      */
 
     public void createGroup(String code, String name, int lecturerId) {
-        if ( Group.getCounter() >= groups.length) {
+        if (Group.getCounter() >= groups.length) {
             groups = Arrays.copyOf(groups, groups.length * 2);
         }
 
         boolean groupExists = false;
         for (int i = 0; i < groups.length; i++) {
             if (groups[i] == null) {
+                if (i == 0) {
+                    Group.setCounter(0);
+                }
                 break;
             } else if (groups[i].getCode() == code) {
                 groupExists = true;
@@ -165,7 +168,7 @@ public class UniversityApp {
             if (groups[i] == null) {
                 break;
             } else if ((studentGrade = groups[i].getGrade(index)) != 0.0) {
-                System.out.printf(new Locale("US"),"%s: %.1f\n", groups[i].getName(), studentGrade);
+                System.out.printf(new Locale("US"), "%s: %.1f\n", groups[i].getName(), studentGrade);
             }
         }
     }
@@ -207,7 +210,7 @@ public class UniversityApp {
             if (groups[i] == null) {
                 break;
             } else {
-                for (int j = 0; j < groups[i].getStudents().length; j++){
+                for (int j = 0; j < groups[i].getStudents().length; j++) {
                     if (groups[i].getStudents()[j] == null) {
                         break;
                     } else {

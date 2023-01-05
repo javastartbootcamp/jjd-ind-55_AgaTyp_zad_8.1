@@ -13,7 +13,6 @@ public class Group {
 
     private double[] grades = new double[10];
 
-
     public Group(String code, String name, int lecturerId) {
         this.code = code;
         this.name = name;
@@ -23,9 +22,9 @@ public class Group {
     }
 
     void add(Student student) {
-        if ( studentsNo >= students.length) {
+        if (studentsNo >= students.length) {
             students = Arrays.copyOf(students, students.length * 2);
-            grades = Arrays.copyOf(grades,grades.length * 2);
+            grades = Arrays.copyOf(grades, grades.length * 2);
         }
 
         if (studentsNo < students.length) {
@@ -79,7 +78,7 @@ public class Group {
     double getGrade(int index) {
         double studentGrade = 0;
 
-        for (int i = 0; i <this.students.length; i++) {
+        for (int i = 0; i < this.students.length; i++) {
             if (indexExist(index)) {
                 studentGrade = this.grades[i];
                 break;
@@ -101,7 +100,6 @@ public class Group {
     public Student[] getStudents() {
         return students;
     }
-
 
     public static int getCounter() {
         return counter;
