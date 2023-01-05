@@ -1,6 +1,13 @@
 package pl.javastart.task;
 
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.TreeSet;
+
 public class UniversityApp {
+
+    private Lecturer[] lecturers = new Lecturer[10];
+    private Group[] groups = new Group[10];
 
     /**
      * Tworzy prowadzącego zajęcia.
@@ -12,8 +19,18 @@ public class UniversityApp {
      * @param firstName - imię prowadzącego
      * @param lastName  - nazwisko prowadzącego
      */
+
     public void createLecturer(int id, String degree, String firstName, String lastName) {
 
+        if ( id >= lecturers.length) {
+            lecturers = Arrays.copyOf(lecturers, lecturers.length * 2);
+        }
+
+        if (lecturers[id - 1] == null) {
+            lecturers[id - 1] = new Lecturer(id, degree, firstName, lastName);
+        } else {
+            System.out.printf("Prowadzący z id %d już istnieje\n", id);
+        }
     }
 
     /**
@@ -27,10 +44,30 @@ public class UniversityApp {
      * @param name       - nazwa przedmiotu (np. "Podstawy programowania")
      * @param lecturerId - identyfikator prowadzącego. Musi zostać wcześniej utworzony za pomocą metody {@link #createLecturer(int, String, String, String)}
      */
+
     public void createGroup(String code, String name, int lecturerId) {
+        if ( Group.getCounter() >= groups.length) {
+            groups = Arrays.copyOf(groups, groups.length * 2);
+        }
 
+        boolean groupExists = false;
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == null) {
+                break;
+            } else if (groups[i].getCode() == code) {
+                groupExists = true;
+                break;
+            }
+        }
+
+        if (lecturers[lecturerId - 1] == null) {
+            System.out.printf("Prowadzący o id %d nie istnieje\n", lecturerId);
+        } else if (groupExists) {
+            System.out.printf("Grupa %s już istnieje\n", code);
+        } else {
+            groups[Group.getCounter()] = new Group(code, name, lecturerId);
+        }
     }
-
 
     /**
      * Dodaje studenta do grupy zajęciowej.
@@ -42,10 +79,22 @@ public class UniversityApp {
      * @param firstName - imię studenta
      * @param lastName  - nazwisko studenta
      */
+
     public void addStudentToGroup(int index, String groupCode, String firstName, String lastName) {
 
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == null) {
+                System.out.printf("Grupa %s nie istnieje\n", groupCode);
+                break;
+            } else if (groups[i].getCode() == groupCode && groups[i].indexExist(index)) {
+                System.out.printf("Student o indeksie %d jest już w grupie %s\n", index, groupCode);
+                break;
+            } else if (groups[i].getCode() == groupCode && !groups[i].indexExist(index)) {
+                groups[i].add(new Student(index, firstName, lastName));
+                break;
+            }
+        }
     }
-
 
     /**
      * Wyświetla informacje o grupie w zadanym formacie.
@@ -62,7 +111,18 @@ public class UniversityApp {
      * @param groupCode - kod grupy, dla której wyświetlić informacje
      */
     public void printGroupInfo(String groupCode) {
-
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == null) {
+                System.out.printf("Grupa %s nie znaleziona\n", groupCode);
+                break;
+            } else if (groups[i].getCode() == groupCode) {
+                groups[i].showGroupInfo();
+                int lecturerId = groups[i].getLecturerId();
+                lecturers[lecturerId - 1].showInfo();
+                groups[i].showGroupStudents();
+                break;
+            }
+        }
     }
 
     /**
@@ -80,7 +140,15 @@ public class UniversityApp {
      * @param grade        - ocena
      */
     public void addGrade(int studentIndex, String groupCode, double grade) {
-
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == null) {
+                System.out.printf("Grupa %s nie istnieje\n", groupCode);
+                break;
+            } else if (groups[i].getCode() == groupCode) {
+                groups[i].addGrade(studentIndex, grade);
+                break;
+            }
+        }
     }
 
     /**
@@ -92,7 +160,14 @@ public class UniversityApp {
      * @param index - numer indesku studenta dla którego wyświetlić oceny
      */
     public void printGradesForStudent(int index) {
-
+        double studentGrade;
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == null) {
+                break;
+            } else if ((studentGrade = groups[i].getGrade(index)) != 0.0) {
+                System.out.printf(new Locale("US"),"%s: %.1f\n", groups[i].getName(), studentGrade);
+            }
+        }
     }
 
     /**
@@ -105,7 +180,15 @@ public class UniversityApp {
      * @param groupCode - kod grupy, dla której wyświetlić oceny
      */
     public void printGradesForGroup(String groupCode) {
-
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == null) {
+                System.out.printf("Grupa %s nie istnieje\n", groupCode);
+                break;
+            } else if (groups[i].getCode() == groupCode) {
+                groups[i].showGroupGrades();
+                break;
+            }
+        }
     }
 
     /**
@@ -117,6 +200,25 @@ public class UniversityApp {
      * 189521 Anna Kowalska
      */
     public void printAllStudents() {
+        TreeSet<Integer> set = new TreeSet<>();
+        int indexNo;
 
+        for (int i = 0; i < groups.length; i++) {
+            if (groups[i] == null) {
+                break;
+            } else {
+                for (int j = 0; j < groups[i].getStudents().length; j++){
+                    if (groups[i].getStudents()[j] == null) {
+                        break;
+                    } else {
+                        indexNo = groups[i].getStudents()[j].getIndex();
+                        if (!set.contains(indexNo)) {
+                            System.out.println(groups[i].getStudents()[j].showInfo());
+                            set.add(indexNo);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
