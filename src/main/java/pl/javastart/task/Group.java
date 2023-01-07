@@ -32,7 +32,7 @@ public class Group {
 
     boolean indexExist(int index) {
         boolean exists = false;
-        for (int i = 0; i < this.students.length; i++) {
+        for (int i = 0; i < studentsNo; i++) {
             if (this.students[i] != null && this.students[i].getIndex() == index) {
                 exists = true;
                 break;
@@ -48,21 +48,21 @@ public class Group {
 
     void showGroupStudents() {
         System.out.print("Uczestnicy:\n");
-        for (int i = 0; i < students.length; i++) {
-            if (students[i] == null) {
-                break;
-            } else {
-                System.out.println(students[i].showInfo());
-            }
+        for (int i = 0; i < studentsNo; i++) {
+            System.out.println(students[i].showInfo());
         }
     }
 
     void addGrade(int index, double grade) {
-        for (int i = 0; i < this.students.length; i++) {
-            if (!indexExist(index)) {
-                System.out.printf("Student o indeksie %d nie jest zapisany do grupy %s\n", index, this.code);
-                break;
-            } else if (this.students[i].getIndex() == index && this.grades[i] == 0) {
+        boolean exists = indexExist(index);
+
+        if (!exists) {
+            System.out.printf("Student o indeksie %d nie jest zapisany do grupy %s\n", index, this.code);
+            return;
+        }
+
+        for (int i = 0; i < studentsNo; i++) {
+            if (this.students[i].getIndex() == index && this.grades[i] == 0) {
                 this.grades[i] = grade;
                 break;
             } else if (this.students[i].getIndex() == index && this.grades[i] != 0) {
@@ -75,8 +75,8 @@ public class Group {
     double getGrade(int index) {
         double studentGrade = 0;
 
-        for (int i = 0; i < this.students.length; i++) {
-            if (indexExist(index)) {
+        for (int i = 0; i < studentsNo; i++) {
+            if (students[i].getIndex() == index) {
                 studentGrade = this.grades[i];
                 break;
             }
@@ -85,12 +85,8 @@ public class Group {
     }
 
     void showGroupGrades() {
-        for (int i = 0; i < students.length; i++) {
-            if (students[i] == null) {
-                break;
-            } else {
-                System.out.println(students[i].showInfo() + ": " + this.grades[i]);
-            }
+        for (int i = 0; i < studentsNo; i++) {
+            System.out.println(students[i].showInfo() + ": " + this.grades[i]);
         }
     }
 

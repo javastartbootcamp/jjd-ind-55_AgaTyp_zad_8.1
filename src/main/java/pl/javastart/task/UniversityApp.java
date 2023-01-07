@@ -84,7 +84,7 @@ public class UniversityApp {
 
     private Group findGroup(String code) {
         for (int i = 0; i < groupSize; i++) {
-            if (groups[i].getCode() == code) {
+            if (Objects.equals(groups[i].getCode(), code)) {
                 return groups[i];
             }
         }
@@ -202,7 +202,7 @@ public class UniversityApp {
         Group group = findGroup(groupCode);
         if (group == null) {
             System.out.printf("Grupa %s nie istnieje\n", groupCode);
-        } else if (Objects.equals(group.getCode(), groupCode)) {
+        } else {
             group.showGroupGrades();
         }
 
